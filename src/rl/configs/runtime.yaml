@@ -1,0 +1,106 @@
+site:
+  lat: 37.5
+  lon: 127.0
+  altitude_m: 50
+  timezone: "Asia/Seoul"
+
+# 기상 데이터 제공자 선택
+weather_provider: "openweathermap_solar"  # "openweathermap_solar", "solcast", "kma", "dummy"
+
+# OpenWeatherMap Solar Irradiance API 설정
+openweathermap_solar:
+  api_key: "de8cd1052431fe996f16cb32e4c5d4f9"  # 환경변수 OPENWEATHERMAP_API_KEY로 덮어쓰기
+  timeout_s: 10
+  retry: {max: 3, backoff: 1.0}
+  cache_ttl_s: 300  # 5분 캐싱
+  
+  endpoints:
+    solar_irradiance: "https://api.openweathermap.org/energy/2.0/solar/interval_data"
+    current_weather: "https://api.openweathermap.org/data/2.5/weather"
+  
+  # 설정
+  interval: "15m"  # 15m, 1h, 1d
+  use_cloudy_sky: true  # true: cloudy_sky 모델, false: clear_sky 모델
+  
+  # 기상 데이터 옵션 (기온, 습도, 풍속)
+  weather_source: "current_weather"  # "current_weather", "dummy"
+
+# Solcast 설정 (태양광 일사량 데이터 전문 API)
+solcast:
+  api_key: "YOUR_API_KEY_HERE"  # 환경변수 SOLCAST_API_KEY로 덮어쓰기 가능
+  timeout_s: 10
+  retry: {max: 3, backoff: 1.0}
+  cache_ttl_s: 300  # 5분 캐싱 (API 호출 절약, 무료 플랜: 50 calls/일)
+  
+  endpoints:
+    live: "https://api.solcast.com.au/data/live/radiation_and_weather"
+  
+  output_parameters:
+    - ghi
+    - dni
+    - dhi
+    - air_temp
+    - relative_humidity
+    - wind_speed_10m
+    - precipitation_rate
+
+kma:
+  # 기상청 API 설정
+  # - station_id: ASOS 관측소 코드 (108: 서울, 133: 대전, 159: 부산 등)
+  # - api_key: 공공데이터포털(data.go.kr)에서 발급받은 API 키
+  # - 발급 방법: https://www.data.go.kr/ 회원가입 후 "기상청_단기예보" API 활용신청
+  station_id: 108
+  api_key: "YOUR_API_KEY_HERE"
+  timeout_s: 5
+  retry: {max: 3, backoff: 0.6}
+  freshness_s: 600
+  
+  # 더미 모드 (테스트/개발용)
+  # true: 실제 API 호출 없이 시뮬레이션 데이터 사용
+  # false: 실제 기상청 API 호출 (API 키 필요)
+  use_dummy: true
+  
+  # 격자 좌표 (초단기실황 API용)
+  # 위경도를 격자 좌표로 변환 필요 (기상청 격자 변환 공식 사용)
+  # 예: 서울(37.5, 127.0) → nx=60, ny=127
+  nx: 60  # 격자 X 좌표
+  ny: 127  # 격자 Y 좌표
+  
+  endpoints:
+    # ⚠️ 일사량 데이터는 기상청 API에서 실시간 제공하지 않음
+    # 더미 모드 사용 또는 태양 위치 기반 계산 권장
+    asos_icsr: "https://apis.data.go.kr/1360000/AsosHourlyInfoService/getWthrDataList"
+    
+    # 초단기실황 (T1H, REH, WSD, PTY 제공)
+    ultrashort: "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst"
+    
+  # API 응답 필드 매핑
+  field_mapping:
+    temperature: "T1H"  # 기온 [°C]
+    humidity: "REH"     # 습도 [%]
+    wind_speed: "WSD"   # 풍속 [m/s]
+    precipitation_type: "PTY"  # 강수형태 (0:없음, 1:비, 2:비/눈, 3:눈, 4:소나기)
+
+bins: [-5, -3, -1, 0, 1, 3, 5]  # 액션 bins
+
+decomposition:
+  method: "erbs"
+
+safety:
+  max_rate_deg_per_step: 5.0
+  angle_bounds: [0, 90]
+  wind_close_ms: 12.0
+  rain_close_mmph: 5.0
+  pty_close_codes: [1, 4]  # 1: 비, 4: 소나기
+
+artifacts:
+  policy_checkpoint_path: "src/rl/outputs/runs/20251012-171846/checkpoint_iter0130.pt"  # policy + B + M + bins
+  policy_backbone_path: "output/gnn/field/best_model_gin_with_class.pt"
+  edge_index_path: "src/rl/runtime/edge_index.pt"
+  edge_attr_path: "src/rl/runtime/edge_attr.pt"
+  modules_csv_path: "src/rl/runtime/modules.csv"
+
+device: "auto"
+
+control:
+  send_interval_s: 10.0

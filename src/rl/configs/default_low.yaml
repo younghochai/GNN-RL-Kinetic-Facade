@@ -1,0 +1,30 @@
+seed: 7
+S_sectors: 64  # 128→64로 줄여 섹터당 모듈 수 증가
+bins: [-5, -3, -1, 0, 1, 3, 5]
+tau: 20.0  # 가우시안 가중치 스케일
+k_nn: 3  # 경계 판단용 이웃 수 (섹터 커지면 4로 복구 가능)
+alpha_sector_smooth: 0.2
+max_rate: 5.0
+angle_bounds: [0.0, 90.0]
+weights: [1.0, 1.0, 0.01]
+gamma: 1.0
+gae_lambda: 1.0
+normalize_rewards: true  # Reward 정규화 (스케일 무관)
+clip_range: 0.2
+entropy_coef: 0.01
+value_coef: 0.5
+target_kl: 0.02
+lr: 0.0001
+num_iterations: 1000  # 롤아웃→업데이트 반복 횟수
+# rollout_steps: 1024
+# minibatch_size: 256
+rollout_steps: 10240
+minibatch_size: 256
+epochs: 1
+dataset_path: "data/datapyg_dataset_rl.pt"
+pretrained_gnn_model_path_field: "output/gnn/field/best_model_gin_with_class.pt"
+pretrained_gnn_model_path_crowd: "output/gnn/crowd/best_model_gin_with_class.pt"
+max_traj_steps: 10
+# 에피소드 보간 설정
+use_interpolation: true  # 인접 샘플 보간 사용
+num_interpolations: 8    # 2시간 사이 중간 스텝 수 (총 n+2 스텝)
