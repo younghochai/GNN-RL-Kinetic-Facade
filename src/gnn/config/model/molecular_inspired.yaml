@@ -1,0 +1,23 @@
+# Molecular Graph Inspired GNN
+model_type: 'molecular_inspired'
+description: 'Molecular Graph Inspired GNN - A GNN model specifically designed for molecular graphs that leverages 3D spatial information like distances and angles between atoms, along with chemical features like bond types and atom properties'
+
+model_config:
+  in_channels: 4
+  hidden_channels: 64
+  global_dim: 7
+  out_dim: 1
+  num_layers: 3
+  use_edge_attr: true
+  use_global_features: false
+  coord_embed_method: 'mlp'
+  pooling_method: 'mean'
+  activation_function: 'relu'
+  dropout: 0.1
+  edge_dim: 2
+  edge_embedding_dim: 16
+  user_global_coord_embedder: false
+  
+  special_config:
+    eps: 0.0
+    train_eps: true

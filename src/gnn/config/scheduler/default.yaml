@@ -1,0 +1,4 @@
+scheduler_type: "step"
+scheduler_config:
+  step_size: 2
+  gamma: 0.1

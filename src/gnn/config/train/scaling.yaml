@@ -1,0 +1,5 @@
+loss_fn: "mae"
+patience: 50
+val_steps: 3
+live_plot: true
+y_scale: true

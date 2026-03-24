@@ -1,0 +1,27 @@
+# GCN (Graph Convolutional Network) - Variant 2
+model_type: 'gcn'
+description: 'Graph Convolutional Network - A Graph Convolutional Network model that uses graph convolution to learn graph structure.'
+
+model_config:
+  # common settings
+  in_channels: 4
+  hidden_channels: 32
+  global_dim: 7
+  out_dim: 1
+  num_layers: 3
+  use_edge_attr: true
+  use_global_features: true
+  coord_embed_method: 'mlp' # 'mlp', 'sinusoidal', 'distance_based', 'spherical'
+  pooling_method: 'max'
+  activation_function: 'leaky_relu'
+  dropout: 0.2
+  edge_dim: 2
+  edge_embedding_dim: 32
+  user_global_coord_embedder: false
+  
+  
+  # GCN specific
+  special_config:
+    normalize: true  # normalization
+    add_self_loops: true  # self-loop
+    bias: true  # bias

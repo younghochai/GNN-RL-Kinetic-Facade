@@ -1,0 +1,10 @@
+scheduler_type: "cyclic"
+scheduler_config:
+  base_lr: 0.001
+  max_lr: 0.1
+  step_size_up: 2
+  mode: "triangular"
+  gamma: 1.0
+  cycle_momentum: true
+  base_momentum: 0.8
+  max_momentum: 0.9

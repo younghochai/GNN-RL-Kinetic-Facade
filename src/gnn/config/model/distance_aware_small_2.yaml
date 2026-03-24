@@ -1,0 +1,26 @@
+# Distance-aware GCN - Variant 2
+model_type: 'distance_aware'
+description: 'Distance-aware GCN - A GCN model that learns spatial relationships between nodes using distance information. Explicitly utilizes distance information through distance thresholds, distance embeddings, and distance weighting methods'
+
+model_config:
+  in_channels: 4
+  hidden_channels: 32
+  global_dim: 7
+  out_dim: 1
+  num_layers: 2
+  use_edge_attr: true
+  use_global_features: false
+  coord_embed_method: 'sinusoidal'
+  pooling_method: 'max'
+  activation_function: 'leaky_relu'
+  dropout: 0.2
+  edge_dim: 2
+  edge_embedding_dim: 32
+  user_global_coord_embedder: false
+  
+  # Distance-aware specific
+  special_config:
+    distance_threshold: 5.0
+    distance_embedding_dim: 16
+    distance_weight_method: 'gaussian'  # 'gaussian', 'linear', 'exponential'
+    gaussian_sigma: 1.0

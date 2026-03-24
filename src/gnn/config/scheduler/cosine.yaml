@@ -1,0 +1,4 @@
+scheduler_type: "cosine"
+scheduler_config:
+  T_max: 52
+  eta_min: 1e-6

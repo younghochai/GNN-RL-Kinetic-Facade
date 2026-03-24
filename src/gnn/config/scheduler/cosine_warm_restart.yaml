@@ -1,0 +1,5 @@
+scheduler_type: "cosine_warm_restart"
+scheduler_config:
+  T_0: 10
+  T_mult: 2
+  eta_min: 1e-6

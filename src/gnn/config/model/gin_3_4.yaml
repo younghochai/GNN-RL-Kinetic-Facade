@@ -1,0 +1,24 @@
+# GIN (Graph Isomorphism Network) - Variant 3
+model_type: 'gin'
+description: 'Graph Isomorphism Network - A Graph Isomorphism Network model that uses node features to learn graph structure. Uses a lightweight MLP inside GIN to learn node representations.'
+
+model_config:
+  in_channels: 4
+  hidden_channels: 128
+  global_dim: 7
+  out_dim: 1
+  num_layers: 4
+  use_edge_attr: false
+  use_global_features: true
+  coord_embed_method: 'sinusoidal' # 'mlp', 'sinusoidal', 'distance_based', 'spherical'
+  pooling_method: 'mean'
+  activation_function: 'gelu'
+  dropout: 0.0
+  edge_dim: 2
+  edge_embedding_dim: 8
+  user_global_coord_embedder: false
+  
+  # GIN specific
+  special_config:
+    eps: 0.0
+    train_eps: true

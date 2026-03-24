@@ -1,0 +1,28 @@
+# GAT (Graph Attention Network) - Variant 4 with Global Coord Embedder
+model_type: 'gat'
+description: 'Graph Attention Network - A Graph Attention Network model that uses an attention mechanism to learn graph structure. Uses multi-head attention to learn node representations while considering edge attributes, enabling the model to capture both node and edge information in the graph structure.'
+
+model_config:
+  in_channels: 4
+  hidden_channels: 96
+  global_dim: 7
+  out_dim: 1
+  num_layers: 3
+  use_edge_attr: true
+  use_global_features: true
+  coord_embed_method: 'distance_based'
+  pooling_method: 'mean'
+  activation_function: 'leaky_relu'
+  dropout: 0.3
+  edge_dim: 2
+  edge_embedding_dim: 64
+  user_global_coord_embedder: true
+  
+  
+  # GAT specific
+  special_config:
+    heads: 6  # attention head
+    concat: false
+    negative_slope: 0.1
+    add_self_loops: false
+    bias: false
